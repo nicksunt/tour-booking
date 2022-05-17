@@ -37,9 +37,6 @@ public class HomeTezPageObj {
     @FindBy(xpath = ("//table[@class='month1']//div[@class='day toMonth  valid']"))
     List <WebElement> allDayOfMonth;
 
-//    @FindBy(xpath = ("//label[text()='Регион Хургада']/ancestor::div[@class='check-field']//input"))
-//         WebElement checkBoxHurgada;
-
     @FindBy(xpath =("//span[@class='nights-text']"))
     WebElement btnQuantityNights;
 
@@ -61,11 +58,11 @@ public class HomeTezPageObj {
     @FindBy(xpath = ("//div[@class='column-content f-box']//div[@class='input-clear-box']/input"))
     WebElement fieldEnterRegion;
 
-    @FindBy(xpath = ("//label[text()='Хургада']//ancestor::div[@class='check-field']//input"))
-    WebElement checkboxRegion;
-
     @FindBy(xpath = ("//input[@name='regions[]']//ancestor::div[@class='check-field']/label"))
     List <WebElement> listRegion;
+
+    @FindBy(xpath = ("//table[@class='month1']//div[1]/span[@class='flight-date']"))
+    WebElement numberFirstValidFlightDate;
 
 
     public HomeTezPageObj (WebDriver driver) {
@@ -90,36 +87,20 @@ public class HomeTezPageObj {
     }
     public HomeTezPageObj enterCountryArrival(String country) throws InterruptedException {
         fieldChoicePlaceArrival.click();
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         fieldsCountryArrival.stream()
                 .filter(x->x.getText().trim().equalsIgnoreCase(country))
                 .findFirst().get().click();
         Thread.sleep(2000);
         return this;
     }
-    //    public HomeTezPageObj clickCheckBoxHurgada() throws InterruptedException {
-//        checkBoxHurgada.click();
-//        Thread.sleep(2000);
-//        return this;
-//    }
+
     public HomeTezPageObj openDatePicker() throws InterruptedException {
         fieldOpenDatePicker.click();
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         return this;
     }
-    public HomeTezPageObj dateDeparture() throws InterruptedException {
-        DateToday dateToday = new DateToday();
-        if (!dateToday.isMonthSame)
-            btnForward.click();
-        Thread.sleep(2000);
-        allDayOfMonth.stream()
-                .filter(x->x.getText().equals(dateToday.numberDayNow))
-                .findFirst()
-                .get()
-                .click();
-        Thread.sleep(2000);
-        return this;
-    }
+
     public HomeTezPageObj chooseQuantityNights(String quantity) throws InterruptedException {
         btnQuantityNights.click();
         choiceQuantityNights.stream()
@@ -146,13 +127,7 @@ public class HomeTezPageObj {
         Thread.sleep(10000);
         return this;
     }
-    //    public HomeTezPageObj chooseRegionCheckBox() throws InterruptedException {
-//        fieldEnterRegion.click();
-//        fieldEnterRegion.sendKeys("Хургада");
-//        checkboxRegion.click();
-//        Thread.sleep(1000);
-//        return this;
-//    }
+
     public HomeTezPageObj chooseRegionCheckBox(String region){
         fieldEnterRegion.click();
         fieldEnterRegion.sendKeys(region);
@@ -161,6 +136,53 @@ public class HomeTezPageObj {
                 .findFirst()
                 .get()
                 .click();
+        return this;
+    }
+
+    public HomeTezPageObj defineDate() throws InterruptedException {
+        String[] dateString = monthName.getText().split(" ");
+        int count = 0;
+        DateToday dateToday = new DateToday();
+
+        if((Integer.parseInt(dateString[1]) == dateToday.year && MonthToNumber.getNumberMonth(dateString[0]) > dateToday.monthNumber)) {
+            numberFirstValidFlightDate.click();
+            Thread.sleep(2000);
+            return this;
+        }
+        else if(Integer.parseInt(dateString[1]) < dateToday.year && MonthToNumber.getNumberMonth(dateString[0]) > dateToday.monthNumber) {
+            count = dateToday.monthNumber - MonthToNumber.getNumberMonth(dateString[0]) + 12;
+            System.out.println(count);
+            while (count != 0) {
+                btnForward.click();
+                Thread.sleep(3000);
+                count--;
+            }
+        }
+        else if(Integer.parseInt(dateString[1]) < dateToday.year && MonthToNumber.getNumberMonth(dateString[0]) < dateToday.monthNumber) {
+            count = dateToday.monthNumber - MonthToNumber.getNumberMonth(dateString[0]) + 12;
+            System.out.println(count);
+            while (count != 0) {
+                btnForward.click();
+                Thread.sleep(3000);
+                count--;
+            }
+        }
+        else if (MonthToNumber.getNumberMonth(dateString[0]) < dateToday.monthNumber  && Integer.parseInt(dateString[1]) == dateToday.year ) {
+            count = dateToday.monthNumber-MonthToNumber.getNumberMonth(dateString[0]);
+            System.out.println(count);
+            while (count != 0) {
+                btnForward.click();
+                Thread.sleep(3000);
+                count--;
+            }
+        }
+        allDayOfMonth.stream()
+                .filter(x -> x.getText().equals(dateToday.numberDayNow))
+                .findFirst()
+                .get()
+                .click();
+
+        Thread.sleep(2000);
         return this;
     }
 }
