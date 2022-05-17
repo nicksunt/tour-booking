@@ -1,9 +1,6 @@
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
-import static org.testng.AssertJUnit.assertEquals;
-
 public class ContainsTextTest extends BaseAbstarctClass{
 
     @Test
@@ -13,7 +10,8 @@ public class ContainsTextTest extends BaseAbstarctClass{
         String quantityNights = "11";
         String ageChild1 = "11 лет";
         String ageChild2 = "7 лет";
-        String region ="Хургада, Египет";
+        String region ="Хургада";
+        String checkRegion = region + ", " + country;
 
         HomeTezPageObj homePage = new HomeTezPageObj(chromeDriver);
         SearchResultPageObj searchResult = new SearchResultPageObj(chromeDriver);
@@ -21,7 +19,7 @@ public class ContainsTextTest extends BaseAbstarctClass{
         homePage.openPageHome()
                 .enterCityDeparture(city)
                 .enterCountryArrival(country)
-                .clickCheckBoxHurgada()
+                .chooseRegionCheckBox(region)
                 .openDatePicker()
                 .dateDeparture()
                 .chooseQuantityNights(quantityNights)
@@ -29,9 +27,7 @@ public class ContainsTextTest extends BaseAbstarctClass{
                 .chooseQuantityPerson(ageChild2)
                 .clickFind();
 
-        Assert.assertTrue(searchResult.isAnyMatchToRegion(region));
-        Assert.assertTrue(searchResult.isAllMatchToRegion(region));
-
+        Assert.assertTrue(searchResult.isAnyMatchToRegion(checkRegion));
+        Assert.assertTrue(searchResult.isAllMatchToRegion(checkRegion));
     }
 }
-

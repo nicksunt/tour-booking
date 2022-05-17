@@ -22,12 +22,10 @@ public class SearchResultPageObj {
     public boolean isAnyMatchToRegion(String region) throws InterruptedException {
         btnLoadElse.click();
         Thread.sleep(3000);
-      return allSearchResult.stream().anyMatch(x->x.getText().trim().equalsIgnoreCase(region));
+        return allSearchResult.stream().anyMatch(x->x.getText().trim().contains(region));
     }
     public boolean isAllMatchToRegion(String region) throws InterruptedException {
-        Thread.sleep(3000);
-        return allSearchResult.stream().allMatch(x->x.getText().trim().equalsIgnoreCase(region));
+        Thread.sleep(5000);
+        return allSearchResult.stream().allMatch(x->x.getText().trim().contains(region));
     }
-
-
 }

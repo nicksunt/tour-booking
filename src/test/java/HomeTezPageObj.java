@@ -14,49 +14,65 @@ public class HomeTezPageObj {
     WebDriver driver;
 
     @FindBy(xpath = ("//div[@class='checked-place']"))
-         WebElement fieldChoicePlaceDeparture;
+    WebElement fieldChoicePlaceDeparture;
+
     @FindBy(xpath = ("//div[@class='place-list-item']//div[@class='name']"))
-         List <WebElement> fieldsCitiesDeparture;
+    List <WebElement> fieldsCitiesDeparture;
+
     @FindBy(xpath = ("//div/label[text()='Куда:']/ancestor::div[1]//input[@class='search-field-input']"))
-         WebElement fieldChoicePlaceArrival;
+    WebElement fieldChoicePlaceArrival;
+
     @FindBy(xpath = ("//div[@class='popular-items ref-items-def category-box']//div[@class='name']"))
-         List <WebElement> fieldsCountryArrival;
+    List <WebElement> fieldsCountryArrival;
+
     @FindBy(xpath = ("//div[@class='select_container calendar-container in']/input"))
-         WebElement fieldOpenDatePicker;
+    WebElement fieldOpenDatePicker;
+
     @FindBy(xpath = ("//table[@class='month1']//th[@class='month-name']"))
-         WebElement monthName;
+    WebElement monthName;
+
     @FindBy(xpath = ("//table[@class='month2']//span[@class='next']"))
-         WebElement btnForward;
+    WebElement btnForward;
+
     @FindBy(xpath = ("//table[@class='month1']//div[@class='day toMonth  valid']"))
-         List <WebElement> allDayOfMonth;
-    @FindBy(xpath = ("//label[text()='Регион Хургада']/ancestor::div[@class='check-field']//input"))
-         WebElement checkBoxHurgada;
+    List <WebElement> allDayOfMonth;
+
+//    @FindBy(xpath = ("//label[text()='Регион Хургада']/ancestor::div[@class='check-field']//input"))
+//         WebElement checkBoxHurgada;
+
     @FindBy(xpath =("//span[@class='nights-text']"))
-         WebElement btnQuantityNights;
+    WebElement btnQuantityNights;
 
     @FindBy(xpath = ("//span[@class='nights-range-picker-num']"))
-         List <WebElement> choiceQuantityNights;
+    List <WebElement> choiceQuantityNights;
 
     @FindBy(xpath =("//div[@class = 'quest ']/div[1]"))
-         WebElement btnQuantityPerson;
+    WebElement btnQuantityPerson;
 
     @FindBy(xpath =("//li[@class='add_kid']/select"))
-          WebElement btnAddChildren;
+    WebElement btnAddChildren;
 
     @FindBy(xpath = ("//li[@class='add_kid']/select/option"))
-          List <WebElement> choiceAgeChild;
+    List <WebElement> choiceAgeChild;
 
     @FindBy(xpath =("//button[@class='button progress-button']"))
-         WebElement btnFind;
+    WebElement btnFind;
 
+    @FindBy(xpath = ("//div[@class='column-content f-box']//div[@class='input-clear-box']/input"))
+    WebElement fieldEnterRegion;
 
+    @FindBy(xpath = ("//label[text()='Хургада']//ancestor::div[@class='check-field']//input"))
+    WebElement checkboxRegion;
+
+    @FindBy(xpath = ("//input[@name='regions[]']//ancestor::div[@class='check-field']/label"))
+    List <WebElement> listRegion;
 
 
     public HomeTezPageObj (WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver,this);
     }
-   public HomeTezPageObj openPageHome() {
+    public HomeTezPageObj openPageHome() {
         driver.get(URL_HOMEPAGE);
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions
@@ -74,18 +90,18 @@ public class HomeTezPageObj {
     }
     public HomeTezPageObj enterCountryArrival(String country) throws InterruptedException {
         fieldChoicePlaceArrival.click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         fieldsCountryArrival.stream()
                 .filter(x->x.getText().trim().equalsIgnoreCase(country))
                 .findFirst().get().click();
         Thread.sleep(2000);
         return this;
     }
-    public HomeTezPageObj clickCheckBoxHurgada() throws InterruptedException {
-        checkBoxHurgada.click();
-        Thread.sleep(2000);
-        return this;
-    }
+    //    public HomeTezPageObj clickCheckBoxHurgada() throws InterruptedException {
+//        checkBoxHurgada.click();
+//        Thread.sleep(2000);
+//        return this;
+//    }
     public HomeTezPageObj openDatePicker() throws InterruptedException {
         fieldOpenDatePicker.click();
         Thread.sleep(2000);
@@ -106,9 +122,11 @@ public class HomeTezPageObj {
     }
     public HomeTezPageObj chooseQuantityNights(String quantity) throws InterruptedException {
         btnQuantityNights.click();
-                choiceQuantityNights.stream()
+        choiceQuantityNights.stream()
                 .filter(x->x.getText().trim().equalsIgnoreCase(quantity))
-                .findFirst().get().click();
+                .findFirst()
+                .get()
+                .click();
         Thread.sleep(1000);
         return this;
     }
@@ -117,7 +135,9 @@ public class HomeTezPageObj {
         btnAddChildren.click();
         choiceAgeChild.stream()
                 .filter(x->x.getText().trim().equalsIgnoreCase(age))
-                .findFirst().get().click();
+                .findFirst()
+                .get()
+                .click();
         Thread.sleep(1000);
         return this;
     }
@@ -126,7 +146,26 @@ public class HomeTezPageObj {
         Thread.sleep(10000);
         return this;
     }
+    //    public HomeTezPageObj chooseRegionCheckBox() throws InterruptedException {
+//        fieldEnterRegion.click();
+//        fieldEnterRegion.sendKeys("Хургада");
+//        checkboxRegion.click();
+//        Thread.sleep(1000);
+//        return this;
+//    }
+    public HomeTezPageObj chooseRegionCheckBox(String region){
+        fieldEnterRegion.click();
+        fieldEnterRegion.sendKeys(region);
+        listRegion.stream()
+                .filter(x->x.getText().trim().equalsIgnoreCase(region))
+                .findFirst()
+                .get()
+                .click();
+        return this;
+    }
 }
+
+
 
 
 
